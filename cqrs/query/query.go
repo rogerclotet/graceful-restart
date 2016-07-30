@@ -10,7 +10,7 @@ import (
 type Query struct {
 	name     string
 	args     argument.Arguments
-	response chan interface{}
+	response chan Response
 }
 
 // New creates a new query with given name and arguments
@@ -18,7 +18,7 @@ func New(name string, args argument.Arguments) Query {
 	return Query{
 		name:     name,
 		args:     args,
-		response: make(chan interface{}, 1),
+		response: make(chan Response, 1),
 	}
 }
 
@@ -28,14 +28,38 @@ func (q Query) Name() string {
 }
 
 // Response returns a channel which will receive the response when the query is handled
-func (q Query) Response() chan interface{} {
+func (q Query) Response() chan Response {
 	return q.response
 }
 
 // Respond allows to send a query response, allowed once per query
-func (q Query) Respond(res interface{}) {
+func (q Query) Respond(res Response) {
 	q.response <- res
 	close(q.response)
+}
+
+// Response encapsulate the response and error of a query
+type Response struct {
+	response interface{}
+	err      error
+}
+
+// NewResponse creates a new QueryResponse with given response and error
+func NewResponse(res interface{}, err error) Response {
+	return Response{
+		response: res,
+		err:      err,
+	}
+}
+
+// Response getter
+func (q Response) Response() interface{} {
+	return q.response
+}
+
+// Err getter
+func (q Response) Err() error {
+	return q.err
 }
 
 // Handler is a function which handles a query

@@ -22,3 +22,6 @@ _testmain.go
 *.exe
 *.test
 *.prof
+
+data.gob # snapshot file
+graceful-restart # default binary name doing go build
