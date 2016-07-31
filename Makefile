@@ -6,11 +6,15 @@ OK_COLOR=\033[32;01m
 ERROR_COLOR=\033[31;01m
 WARN_COLOR=\033[33;01m
 
-check: fmt lint vet errcheck test
+check: fmt imports lint vet errcheck test
 
 fmt:
 	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
 	gofmt -s -w $(SOURCES)
+
+imports:
+	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
+	goimports -w $(SOURCES)
 
 lint:
 	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
