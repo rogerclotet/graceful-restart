@@ -7,6 +7,10 @@ type Argument struct {
 	value interface{}
 }
 
+func New(value interface{}) Argument {
+	return Argument{value: value}
+}
+
 // Int returns an int value for an argument, or an error if it is not an int
 func (a Argument) Int() (int, error) {
 	value, ok := a.value.(int)

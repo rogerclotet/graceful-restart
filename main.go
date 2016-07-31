@@ -18,6 +18,7 @@ import (
 	"sync"
 	"syscall"
 	"time"
+	"net/url"
 )
 
 const inheritedFileDescriptor = 3
@@ -56,23 +57,27 @@ func main() {
 
 	http.Handle("/command", func() http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			name := r.URL.Query().Get("cmd")
-			if name == "" {
+			uq := r.URL.Query()
+			args := argsFromURLQuery(uq)
+			name, err := args.Get("cmd")
+			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				return
 			}
-			commands <- command.New(name, argument.Arguments{}) // TODO parse arguments
+			commands <- command.New(name, args)
 		}
 	}())
 
 	http.Handle("/query", func() http.HandlerFunc {
 		return func(w http.ResponseWriter, r *http.Request) {
-			name := r.URL.Query().Get("q")
-			if name == "" {
+			uq := r.URL.Query()
+			args := argsFromURLQuery(uq)
+			name, err := args.Get("q")
+			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				return
 			}
-			q := query.New(name, argument.Arguments{}) // TODO parse arguments
+			q := query.New(name, args)
 			queries <- q
 
 			qr := <-q.Response()
@@ -194,6 +199,14 @@ func startFork(l *gracefulListener) {
 	if err != nil {
 		log.Fatalf("gracefulRestart: Failed to launch, error: %v", err)
 	}
+}
+
+func argsFromURLQuery(query url.Values) argument.Arguments {
+	var args argument.Arguments
+	for k, v := range query {
+		args[k] = argument.New(v)
+	}
+	return args
 }
 
 func queue(ctx context.Context, in chan interface{}, out chan interface{}, process chan bool) {
