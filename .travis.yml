@@ -1,0 +1,18 @@
+language: go
+
+go:
+  - tip
+
+install:
+  - go get -u golang.org/x/tools/cmd/goimports
+  - go get -u github.com/golang/lint/golint
+  - go get -u github.com/kisielk/errcheck
+  - go get -u github.com/GeertJohan/fgt
+
+script:
+  - make fmt-ci
+  - make imports-ci
+  - make lint
+  - make vet
+  - make errcheck
+  - make test-ci
