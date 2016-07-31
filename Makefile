@@ -12,9 +12,17 @@ fmt:
 	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
 	gofmt -s -w $(SOURCES)
 
+fmt-ci:
+	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
+	fgt gofmt -s -l -d $(SOURCES)
+
 imports:
 	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
 	goimports -w $(SOURCES)
+
+imports-ci:
+	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
+	goimports -d -e $(SOURCES)
 
 lint:
 	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
@@ -31,3 +39,7 @@ errcheck:
 test:
 	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
 	go test ${PACKAGES}
+
+test-ci:
+	@echo "$(WARN_COLOR)+ $@$(NO_COLOR)"
+	go test -race ${PACKAGES}
