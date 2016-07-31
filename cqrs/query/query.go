@@ -3,6 +3,7 @@ package query
 import (
 	"context"
 	"fmt"
+
 	"github.com/rogerclotet/graceful-restart/cqrs/argument"
 )
 

@@ -5,12 +5,10 @@ import (
 	"encoding/gob"
 	"flag"
 	"fmt"
-	"github.com/rogerclotet/graceful-restart/cqrs/argument"
-	"github.com/rogerclotet/graceful-restart/cqrs/command"
-	"github.com/rogerclotet/graceful-restart/cqrs/query"
 	"log"
 	"net"
 	"net/http"
+	"net/url"
 	"os"
 	"os/exec"
 	"os/signal"
@@ -18,7 +16,10 @@ import (
 	"sync"
 	"syscall"
 	"time"
-	"net/url"
+
+	"github.com/rogerclotet/graceful-restart/cqrs/argument"
+	"github.com/rogerclotet/graceful-restart/cqrs/command"
+	"github.com/rogerclotet/graceful-restart/cqrs/query"
 )
 
 const inheritedFileDescriptor = 3
@@ -59,7 +60,7 @@ func main() {
 		return func(w http.ResponseWriter, r *http.Request) {
 			uq := r.URL.Query()
 			args := argsFromURLQuery(uq)
-			name, err := args.Get("cmd")
+			name, err := args.GetString("cmd")
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				return
@@ -72,7 +73,7 @@ func main() {
 		return func(w http.ResponseWriter, r *http.Request) {
 			uq := r.URL.Query()
 			args := argsFromURLQuery(uq)
-			name, err := args.Get("q")
+			name, err := args.GetString("q")
 			if err != nil {
 				w.WriteHeader(http.StatusBadRequest)
 				return
