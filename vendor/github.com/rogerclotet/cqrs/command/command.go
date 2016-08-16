@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogerclotet/graceful-restart/cqrs/argument"
+	"github.com/rogerclotet/cqrs/argument"
 )
 
 // Command represents a command to be executed, which contains its name and arguments

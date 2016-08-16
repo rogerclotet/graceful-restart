@@ -4,7 +4,7 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/rogerclotet/graceful-restart/cqrs/argument"
+	"github.com/rogerclotet/cqrs/argument"
 )
 
 // Query represents a query to be executed, which contains its name, args and a response channel
